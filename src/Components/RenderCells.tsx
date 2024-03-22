@@ -19,32 +19,25 @@ export default function RenderCells({ currentDate }: RenderDaysProps) {
 
   while (day <= endDate) {
     for (let i = 0; i < 7; i++) {
-      formattedDate = format(day, "d");
-      const dayKey = format(day, "yyyy-MM-dd");
-      days.push(
-        <div
-          className={`col cell ${
-            !isSameMonth(day, monthStart)
-              ? "disabled"
-              : format(currentDate, "M") !== format(day, "M")
-              ? "not-valid"
-              : "valid"
-          }`}
-          key={dayKey}
-        >
-          <span
-            className={
-              format(currentDate, "M") !== format(day, "M")
-                ? "text not-valid"
-                : ""
-            }
-          >
+      if (isSameMonth(day, monthStart)) {
+        formattedDate = format(day, "d");
+        const dayKey = format(day, "yyyy-MM-dd");
+        days.push(
+          <div className={`col cell`} key={dayKey}>
             {formattedDate}
-          </span>
-        </div>
-      );
+          </div>
+        );
+      } else {
+        days.push(
+          <div className={`col cell disabled`} key={format(day, "yyyy-MM-dd")}>
+            {/* 현재 달과 다른 날짜는 출력하지 않음 */}
+          </div>
+        );
+      }
+
       day = addDays(day, 1);
     }
+
     rows.push(
       <div className="row" key={day.toISOString()}>
         {days}
