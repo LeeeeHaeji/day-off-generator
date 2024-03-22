@@ -1,6 +1,6 @@
-import { createGlobalStyle } from "styled-components"; // ✨ 1
+import { createGlobalStyle } from "styled-components";
 
-export const GlobalStyle = createGlobalStyle`  // ✨ 2
+export const GlobalStyle = createGlobalStyle`
     
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
@@ -31,7 +31,7 @@ footer, header, hgroup, main, menu, nav, section {
 
 /* HTML5 hidden-attribute fix for newer browsers */
 *[hidden] {
-    display: none;
+  display: none;
 }
 
 body {
@@ -40,7 +40,7 @@ body {
   color: ${(props) => props.theme.textColor};
 }
 
-menu, ol, ul {
+menu, ol, ul,li {
   list-style: none;
 }
 
