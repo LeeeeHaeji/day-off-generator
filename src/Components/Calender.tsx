@@ -2,16 +2,18 @@ import styled from "styled-components";
 
 import RenderDays from "./RenderDays";
 import RenderCells from "./RenderCells";
+import { EmployeeData } from "../type";
 
 interface CalenderProps {
   currentDate: string;
+  employees: EmployeeData[];
 }
 
-export default function Calender({ currentDate }: CalenderProps) {
+export default function Calender({ currentDate, employees }: CalenderProps) {
   return (
     <CalenderWrap>
       <RenderDays />
-      <RenderCells currentDate={currentDate} />
+      <RenderCells currentDate={currentDate} employees={employees} />
     </CalenderWrap>
   );
 }

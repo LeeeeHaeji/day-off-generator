@@ -1,12 +1,17 @@
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { isSameMonth, addDays, format } from "date-fns";
 import styled from "styled-components";
+import { EmployeeData } from "../type";
 
 interface RenderDaysProps {
   currentDate: string;
+  employees: EmployeeData[];
 }
 
-export default function RenderCells({ currentDate }: RenderDaysProps) {
+export default function RenderCells({
+  currentDate,
+  employees,
+}: RenderDaysProps) {
   const monthStart = startOfMonth(new Date(currentDate));
   const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart);
@@ -22,9 +27,21 @@ export default function RenderCells({ currentDate }: RenderDaysProps) {
       if (isSameMonth(day, monthStart)) {
         formattedDate = format(day, "d");
         const dayKey = format(day, "yyyy-MM-dd");
+
+        let dayOffEmployees = employees
+          .filter((employee) => {
+            return employee.day_off.includes(formattedDate);
+          })
+          .map((employee) => (
+            <NameWrap>
+              <span key={employee.name}>{employee.name}</span>
+            </NameWrap>
+          ));
+
         days.push(
           <div className={`col cell`} key={dayKey}>
             {formattedDate}
+            <div className="dayOffNames">{dayOffEmployees}</div>
           </div>
         );
       } else {
@@ -65,4 +82,9 @@ const DayContainer = styled.div`
     background: orange;
     border: 1px solid red;
   }
+`;
+
+const NameWrap = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
