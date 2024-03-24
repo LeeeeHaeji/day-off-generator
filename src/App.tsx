@@ -7,6 +7,7 @@ import { darkTheme, lightTheme } from "./Styles/theme";
 import { EmployeeData } from "./type";
 
 import Calender from "./Components/Calender";
+import Header from "./Components/Header";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -185,10 +186,6 @@ function App() {
     setDayOffMax(e.target.value);
   };
 
-  const handleDarkMode = () => {
-    setIsDark(!isDark);
-  };
-
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     fillRandomDayOffs();
@@ -197,12 +194,8 @@ function App() {
   return (
     <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
       <GlobalStyle />
-      <div>
-        <p>다크모드</p>
-        <button type="button" onClick={handleDarkMode}>
-          클릭!
-        </button>
-      </div>
+
+      <Header isDark={isDark} setIsDark={setIsDark} />
 
       <Main>
         <FormData onSubmit={handleSubmit}>

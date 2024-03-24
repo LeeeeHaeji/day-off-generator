@@ -1,7 +1,12 @@
 import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyle = createGlobalStyle`
-    
+
+*{
+  font-family: "GmarketSans";
+  font-size: 62.5%;
+}
+
 html, body, div, span, applet, object, iframe,
 h1, h2, h3, h4, h5, h6, p, blockquote, pre,
 a, abbr, acronym, address, big, cite, code,
@@ -18,8 +23,6 @@ time, mark, audio, video {
   margin: 0;
   padding: 0;
   border: 0;
-  font-size: 62.5%;
-  font: inherit;
   vertical-align: baseline;
 }
 
@@ -38,6 +41,13 @@ body {
   line-height: 1;
   background-color: ${(props) => props.theme.bgColor};
   color: ${(props) => props.theme.textColor};
+}
+
+button {
+  background-color: ${(props) => props.theme.accentColor};
+  border : none;
+  border-radius: 5px;
+  color: white;
 }
 
 menu, ol, ul,li {
