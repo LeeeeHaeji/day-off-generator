@@ -37,6 +37,10 @@ footer, header, hgroup, main, menu, nav, section {
   display: none;
 }
 
+img{
+  display:block;
+}
+
 body {
   line-height: 1;
   background-color: ${(props) => props.theme.bgColor};
@@ -48,6 +52,7 @@ button {
   border : none;
   border-radius: 5px;
   color: white;
+  cursor: pointer;
 }
 
 menu, ol, ul,li {

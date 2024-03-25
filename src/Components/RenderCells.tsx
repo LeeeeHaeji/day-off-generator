@@ -32,16 +32,19 @@ export default function RenderCells({
           .filter((employee) => {
             return employee.day_off.includes(formattedDate);
           })
-          .map((employee) => (
-            <NameWrap>
-              <span key={employee.name}>{employee.name}</span>
-            </NameWrap>
+          .map((employee, index) => (
+            <NameWrapListItem
+              key={`${employee.name}-${index}`}
+              bg_color={employee.bg_color}
+            >
+              <p>{employee.name}</p>
+            </NameWrapListItem>
           ));
 
         days.push(
           <div className={`col cell`} key={dayKey}>
-            {formattedDate}
-            <div className="dayOffNames">{dayOffEmployees}</div>
+            <p className="date">{formattedDate}</p>
+            <NameList className="dayOffNames">{dayOffEmployees}</NameList>
           </div>
         );
       } else {
@@ -78,13 +81,55 @@ const DayContainer = styled.div`
 
   .cell {
     width: 100%;
-    height: 100px;
-    background: orange;
-    border: 1px solid red;
+    min-height: 100px;
+    background: white;
+    border: 1px solid #730202;
+    border-radius: 5px;
+
+    padding: 8px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
+    p {
+      padding-bottom: 1px;
+    }
+  }
+
+  .date {
+    font-size: 1.6rem;
+    border-bottom: 1px solid #730202;
   }
 `;
 
-const NameWrap = styled.div`
+const NameList = styled.ul`
   display: flex;
   flex-direction: column;
+  gap: 5px;
+
+  p {
+    font-size: 1.6rem;
+  }
+`;
+
+const NameWrapListItem = styled.li<{ bg_color: string }>`
+  width: fit-content;
+  display: flex;
+  align-items: center;
+  border-radius: 50px;
+
+  padding: 2px 10px;
+
+  background-color: ${(props) => props.bg_color};
+
+  p {
+    margin-top: 3px;
+    line-height: 1.2;
+  }
+
+  button {
+    padding: 0;
+    background: transparent;
+  }
 `;

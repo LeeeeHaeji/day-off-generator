@@ -18,6 +18,10 @@ const DaysRow = styled.div`
   li {
     width: 100%;
     text-align: center;
-    background: orange;
+    background: ${(props) => props.theme.accentBgColor};
+    font-size: 1.8rem;
+
+    border-radius: 10px;
+    padding: 10px;
   }
 `;
