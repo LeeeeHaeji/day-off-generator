@@ -102,7 +102,7 @@ export default function AddDayOff({
       </div>
 
       <EmployeesData>
-        {employees.length > 0 &&
+        {employees.length > 0 ? (
           employees.map((employee, index) => (
             <EmployeesDataItem
               key={`${employee.name}-${index}`}
@@ -149,7 +149,10 @@ export default function AddDayOff({
                 </ul>
               </DayOffList>
             </EmployeesDataItem>
-          ))}
+          ))
+        ) : (
+          <p className="empty-list">등록된 직원이 없습니다.</p>
+        )}
       </EmployeesData>
     </AddDayOffWrap>
   );
@@ -176,25 +179,65 @@ const AddDayOffWrap = styled.div`
 
   .text-wrap {
     display: flex;
-    align-items: flex-end;
+    flex-direction: column;
+
     gap: 8px;
 
     border-bottom: 1px solid white;
     padding-bottom: 5px;
+
+    @media (min-width: 1024px) {
+      flex-direction: row;
+      align-items: flex-end;
+    }
+  }
+
+  .empty-list {
+    font-size: 2.2rem;
+    grid-column: 2 / 3;
+    width: content-fit;
+    margin: auto;
+
+    padding: 20px 0;
+
+    // color: ${(props) => props.theme.accentColor};
   }
 `;
 
 const EmployeesData = styled.div`
   display: flex;
-
-  flex-wrap: wrap;
+  flex-direction: column;
   gap: 20px;
   padding-top: 8px;
+  padding-right: 10px;
+  overflow-y: auto;
+  max-height: 438px;
+
+  @media (min-width: 628px) {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  &::-webkit-scrollbar {
+    width: 12px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: ${(props) => props.theme.accentColor};
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+  }
 `;
 
 const EmployeesDataItem = styled.ul`
-  width: 320px;
-
   * {
     font-size: 1.6rem;
   }
@@ -222,6 +265,7 @@ const EmployeesDataItem = styled.ul`
 
     font-size: 1.4rem;
     padding: 0 10px;
+    background: ${(props) => props.theme.inputBGColor};
   }
 
   .add-button {
@@ -231,7 +275,8 @@ const EmployeesDataItem = styled.ul`
 
 const DayOffList = styled.div`
   height: 130px;
-  background: white;
+  background: ${(props) => props.theme.inputBGColor};
+
   padding: 10px;
 
   display: flex;

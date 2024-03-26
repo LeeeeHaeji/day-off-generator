@@ -24,15 +24,14 @@ export default function Calender({ currentDate, employees }: CalenderProps) {
 }
 
 const CalenderWrap = styled.article`
-  min-width: 700px;
   display: flex;
   flex-direction: column;
   width: 100%;
-
+  flex: 1;
   gap: 10px;
 
   .year-month {
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: white;
     text-align: end;
@@ -41,5 +40,9 @@ const CalenderWrap = styled.article`
     padding: 8px 10px;
 
     line-height: 1.2;
+  }
+
+  @media (max-width: 355px) {
+    width: 315px;
   }
 `;

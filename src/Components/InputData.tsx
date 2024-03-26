@@ -155,29 +155,29 @@ export default function InputData({
           onChange={handleDate}
         />
       </Data>
+      <DataWrap>
+        <Data>
+          <label htmlFor="day-off-num">1인 월 휴무 개수를 입력해주세요.</label>
+          <input
+            type="number"
+            id="day-off-num"
+            value={dayOffNum}
+            onChange={handleDayOffNum}
+          />
+        </Data>
 
-      <Data>
-        <label htmlFor="day-off-num">1인 월 휴무 개수를 입력해주세요.</label>
-        <input
-          type="number"
-          id="day-off-num"
-          value={dayOffNum}
-          onChange={handleDayOffNum}
-        />
-      </Data>
-
-      <Data>
-        <label htmlFor="day-off-max">
-          하루에 최대 몇명까지 휴무가 가능한가요?
-        </label>
-        <input
-          type="number"
-          id="day-off-max"
-          value={dayOffMax}
-          onChange={handleDayOffMax}
-        />
-      </Data>
-
+        <Data>
+          <label htmlFor="day-off-max">
+            하루에 최대 몇명까지 휴무가 가능한가요?
+          </label>
+          <input
+            type="number"
+            id="day-off-max"
+            value={dayOffMax}
+            onChange={handleDayOffMax}
+          />
+        </Data>
+      </DataWrap>
       <Data>
         <label htmlFor="employee-name">
           휴무 일정을 배정할 직원을 작성해 주세요.
@@ -229,9 +229,10 @@ export default function InputData({
 }
 
 const FormData = styled.form`
-  max-width: 360px;
   background: ${(props) => props.theme.accentBgColor};
   display: flex;
+
+  flex: 0.4;
   flex-direction: column;
   gap: 20px;
   height: 100%;
@@ -240,7 +241,7 @@ const FormData = styled.form`
   border-radius: 10px;
 
   label {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
   }
 
   .button {
@@ -249,8 +250,22 @@ const FormData = styled.form`
   }
 
   .submit.button {
-    font-size: 1.8rem;
+    font-size: 1.6rem;
     height: 48px;
+  }
+
+  @media (min-width: 1023px) {
+    max-width: 360px;
+  }
+`;
+
+const DataWrap = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  @media (min-width: 628px) and (max-width: 1023px) {
+    flex-direction: row;
   }
 `;
 
@@ -258,14 +273,26 @@ const Data = styled.div`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  width: 100%;
 
   input {
+    width: 100%;
     border: none;
     border-radius: 5px;
     height: 40px;
 
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     padding: 0 10px;
+    background: ${(props) => props.theme.inputBGColor};
+
+    &::-webkit-calendar-picker-indicator {
+      // color: ${(props) => props.theme.accentColor};
+      // background: black;
+      cursor: pointer;
+      width: 20px;
+      height: 20px;
+      padding-left: 100px;
+    }
   }
 
   .add-employee {
@@ -275,13 +302,13 @@ const Data = styled.div`
 
   .button.add {
     width: 100px;
-    font-size: 1.6rem;
+    font-size: 1.5rem;
   }
 `;
 
 const EmployeeList = styled.div`
-  height: 100%;
-  background: white;
+  height: 150px;
+  background: ${(props) => props.theme.inputBGColor};
   padding: 10px;
 
   display: flex;
@@ -291,7 +318,7 @@ const EmployeeList = styled.div`
   gap: 8px;
 
   p {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
   }
 
   ul {
@@ -324,8 +351,7 @@ const EmployeeListItem = styled.li<{ bg_color: string }>`
   padding: 4px 5px 4px 9px;
   border-radius: 50px;
   gap: 0px;
-  background-color: ${(props) =>
-    props.bg_color}; // Use the bg_color prop for background
+  background-color: ${(props) => props.bg_color};
 
   p {
     margin-top: 3px;

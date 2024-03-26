@@ -70,5 +70,10 @@ const Main = styled.section`
 
 const Wrap = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 20px;
+
+  @media (min-width: 1023px) {
+    flex-direction: row;
+  }
 `;

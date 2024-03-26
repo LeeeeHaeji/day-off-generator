@@ -82,7 +82,8 @@ const DayContainer = styled.div`
   .cell {
     width: 100%;
     min-height: 100px;
-    background: white;
+    background: ${(props) => props.theme.inputBGColor};
+
     border: 1px solid #730202;
     border-radius: 5px;
 
@@ -98,7 +99,7 @@ const DayContainer = styled.div`
   }
 
   .date {
-    font-size: 1.6rem;
+    font-size: 1.4rem;
     border-bottom: 1px solid #730202;
   }
 `;
@@ -109,7 +110,7 @@ const NameList = styled.ul`
   gap: 5px;
 
   p {
-    font-size: 1.6rem;
+    font-size: 1.3rem;
   }
 `;
 
@@ -131,5 +132,9 @@ const NameWrapListItem = styled.li<{ bg_color: string }>`
   button {
     padding: 0;
     background: transparent;
+  }
+
+  @media (max-width: 542px) {
+    padding: 0px;
   }
 `;

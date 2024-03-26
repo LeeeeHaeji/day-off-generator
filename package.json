@@ -49,5 +49,6 @@
   "devDependencies": {
     "gh-pages": "^6.1.1"
   },
-  "homepage": "https://leeeehaeji.github.io/day-off-generator/"
+  "type": "module",
+  "homepage": "https://leeeehaeji.github.io/day-off-generator"
 }

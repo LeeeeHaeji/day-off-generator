@@ -14,14 +14,18 @@ export default function RenderDays() {
 const DaysRow = styled.div`
   display: flex;
   gap: 10px;
-
+  width: 100%;
   li {
     width: 100%;
     text-align: center;
     background: ${(props) => props.theme.accentBgColor};
-    font-size: 1.8rem;
+    font-size: 1.6rem;
 
     border-radius: 10px;
     padding: 10px;
+
+    @media (max-width: 512px) {
+      padding: 10px 0;
+    }
   }
 `;

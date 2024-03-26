@@ -5,6 +5,14 @@ export const GlobalStyle = createGlobalStyle`
 *{
   font-family: "GmarketSans";
   font-size: 62.5%;
+
+  @media (min-width: 628px) {
+    font-size: 70%;
+  }
+
+	@media (min-width: 1024px) {
+    font-size: 75%;
+  }
 }
 
 html, body, div, span, applet, object, iframe,
@@ -45,6 +53,10 @@ body {
   line-height: 1;
   background-color: ${(props) => props.theme.bgColor};
   color: ${(props) => props.theme.textColor};
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 button {
