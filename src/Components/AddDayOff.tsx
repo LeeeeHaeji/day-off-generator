@@ -193,14 +193,15 @@ const AddDayOffWrap = styled.div`
   }
 
   .empty-list {
-    font-size: 2.2rem;
-    grid-column: 2 / 3;
+    font-size: 2rem;
     width: content-fit;
     margin: auto;
 
     padding: 20px 0;
 
-    // color: ${(props) => props.theme.accentColor};
+    @media (min-width: 1024px) {
+      grid-column: 2 / 3;
+    }
   }
 `;
 

@@ -10,6 +10,7 @@ import Calender from "./Components/Calender";
 import Header from "./Components/Header";
 import InputData from "./Components/InputData";
 import AddDayOff from "./Components/AddDayOff";
+import KakaoAdFit from "./Components/KakaoAdFit";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
@@ -35,25 +36,28 @@ function App() {
       <Header isDark={isDark} setIsDark={setIsDark} />
 
       <Main>
-        <Wrap>
-          <InputData
-            currentDate={currentDate}
-            updateCurrentDate={updateCurrentDate}
+        <div className="main-item">
+          <Wrap>
+            <InputData
+              currentDate={currentDate}
+              updateCurrentDate={updateCurrentDate}
+              employees={employees}
+              updateEmployees={updateEmployees}
+              dayOffNum={dayOffNum}
+              setDayOffNum={setDayOffNum}
+              dayOffMax={dayOffMax}
+              setDayOffMax={setDayOffMax}
+            />
+            <Calender currentDate={currentDate} employees={employees} />
+          </Wrap>
+          <AddDayOff
             employees={employees}
             updateEmployees={updateEmployees}
             dayOffNum={dayOffNum}
-            setDayOffNum={setDayOffNum}
             dayOffMax={dayOffMax}
-            setDayOffMax={setDayOffMax}
           />
-          <Calender currentDate={currentDate} employees={employees} />
-        </Wrap>
-        <AddDayOff
-          employees={employees}
-          updateEmployees={updateEmployees}
-          dayOffNum={dayOffNum}
-          dayOffMax={dayOffMax}
-        />
+        </div>
+        <KakaoAdFit />
       </Main>
     </ThemeProvider>
   );
@@ -63,9 +67,19 @@ export default App;
 const Main = styled.section`
   display: flex;
   flex-direction: column;
-
   gap: 20px;
   margin: 20px;
+
+  .main-item {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    flex: 1;
+  }
+
+  @media (min-width: 1024px) {
+    flex-direction: row;
+  }
 `;
 
 const Wrap = styled.div`

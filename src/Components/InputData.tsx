@@ -235,9 +235,8 @@ const FormData = styled.form`
   flex: 0.4;
   flex-direction: column;
   gap: 20px;
-  height: 100%;
-  justify-content: space-evenly;
-  padding: 16px 20px;
+  height: fit-content;
+  padding: 20px 20px;
   border-radius: 10px;
 
   label {
