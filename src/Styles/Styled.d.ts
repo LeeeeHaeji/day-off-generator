@@ -7,6 +7,8 @@ declare module "styled-components" {
     accentColor: string;
     accentBgColor: string;
     scrollColor: string;
-    inputBGColor: string;
+    inputBgColor: string;
+    calenderBorder: string;
+    dayOffListBgColor: string;
   }
 }

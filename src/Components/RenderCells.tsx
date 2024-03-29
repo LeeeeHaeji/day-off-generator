@@ -82,9 +82,9 @@ const DayContainer = styled.div`
   .cell {
     width: 100%;
     min-height: 100px;
-    background: ${(props) => props.theme.inputBGColor};
+    background: ${(props) => props.theme.inputBgColor};
 
-    border: 1px solid #730202;
+    border: 1px solid ${(props) => props.theme.calenderBorder};
     border-radius: 5px;
 
     padding: 8px;
@@ -100,7 +100,9 @@ const DayContainer = styled.div`
 
   .date {
     font-size: 1.4rem;
-    border-bottom: 1px solid #730202;
+    border-bottom: 1px solid ${(props) => props.theme.calenderBorder};
+    color: #262624;
+    line-height: 1.2;
   }
 `;
 

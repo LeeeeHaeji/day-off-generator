@@ -1,6 +1,7 @@
 import { useEffect, useRef } from "react";
 import styled from "styled-components";
 import logo from "../assets/images/logo.svg";
+import logoDarkMode from "../assets/images/logoDarkMode.svg";
 import { gsap } from "gsap";
 
 interface HeaderProps {
@@ -57,7 +58,11 @@ export default function Header({ isDark, setIsDark }: HeaderProps) {
     <HeaderWrap>
       <Container>
         <h1>
-          <img src={logo} alt="" />
+          {isDark ? (
+            <img src={logoDarkMode} alt="" />
+          ) : (
+            <img src={logo} alt="" />
+          )}
         </h1>
         <Toggle>
           <div className="switch" onClick={handleToggleClick} ref={toggleRef}>
@@ -83,13 +88,13 @@ export default function Header({ isDark, setIsDark }: HeaderProps) {
 }
 
 const HeaderWrap = styled.header`
-  background: white;
+  background: ${(props) => props.theme.inputBgColor};
 `;
 
 const Container = styled.section`
   margin: auto;
   max-width: 1284px;
-  background: white;
+  background: ${(props) => props.theme.inputBgColor};
   display: flex;
   justify-content: space-between;
   align-items: center;

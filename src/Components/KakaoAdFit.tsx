@@ -18,7 +18,7 @@ export default function KakaoAdFit() {
 
       // 윈도우 사이즈에 따라 광고 사이즈 조정
       const windowSize = window.innerWidth;
-      if (windowSize > 1024) {
+      if (windowSize >= 1024) {
         ins.setAttribute("data-ad-width", "160");
         ins.setAttribute("data-ad-height", "600");
         ins.setAttribute("data-ad-unit", "DAN-PvkGzjjr2IA1Emar");

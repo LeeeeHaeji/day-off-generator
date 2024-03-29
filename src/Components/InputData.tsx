@@ -199,7 +199,7 @@ export default function InputData({
           </button>
         </div>
         <EmployeeList>
-          <p>직원 목록:</p>
+          <p className="list-name">직원 목록:</p>
           {employees.length > 0 && (
             <ul>
               {employees.map((employee, index) => (
@@ -282,11 +282,9 @@ const Data = styled.div`
 
     font-size: 1.2rem;
     padding: 0 10px;
-    background: ${(props) => props.theme.inputBGColor};
+    background: ${(props) => props.theme.inputBgColor};
 
     &::-webkit-calendar-picker-indicator {
-      // color: ${(props) => props.theme.accentColor};
-      // background: black;
       cursor: pointer;
       width: 20px;
       height: 20px;
@@ -307,7 +305,7 @@ const Data = styled.div`
 
 const EmployeeList = styled.div`
   height: 150px;
-  background: ${(props) => props.theme.inputBGColor};
+  background: ${(props) => props.theme.inputBgColor};
   padding: 10px;
 
   display: flex;
@@ -318,6 +316,10 @@ const EmployeeList = styled.div`
 
   p {
     font-size: 1.4rem;
+  }
+
+  .list-name {
+    color: #262624;
   }
 
   ul {

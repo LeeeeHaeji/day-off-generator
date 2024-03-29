@@ -133,7 +133,7 @@ export default function AddDayOff({
               </div>
 
               <DayOffList>
-                <p>휴무일: </p>
+                <p className="list-name">휴무일: </p>
                 <ul>
                   {employee.day_off.map((day, index) => (
                     <DayOffListItem key={index}>
@@ -266,7 +266,7 @@ const EmployeesDataItem = styled.ul`
 
     font-size: 1.4rem;
     padding: 0 10px;
-    background: ${(props) => props.theme.inputBGColor};
+    background: ${(props) => props.theme.inputBgColor};
   }
 
   .add-button {
@@ -276,7 +276,7 @@ const EmployeesDataItem = styled.ul`
 
 const DayOffList = styled.div`
   height: 130px;
-  background: ${(props) => props.theme.inputBGColor};
+  background: ${(props) => props.theme.inputBgColor};
 
   padding: 10px;
 
@@ -288,6 +288,10 @@ const DayOffList = styled.div`
 
   p {
     font-size: 1.6rem;
+  }
+
+  .list-name {
+    color: #262624;
   }
 
   ul {
@@ -320,7 +324,7 @@ const DayOffListItem = styled.li`
   padding: 4px 5px 4px 9px;
   border-radius: 50px;
   gap: 0px;
-  background-color: rgba(140, 140, 135, 0.6);
+  background-color: ${(props) => props.theme.dayOffListBgColor};
 
   p {
     margin-top: 3px;
