@@ -21,15 +21,15 @@ export default function KakaoAdFit() {
       if (windowSize >= 1024) {
         ins.setAttribute("data-ad-width", "160");
         ins.setAttribute("data-ad-height", "600");
-        ins.setAttribute("data-ad-unit", "DAN-PvkGzjjr2IA1Emar");
+        ins.setAttribute("data-ad-unit", "DAN-Rin0pnW4VLYgMeRk");
       } else if (windowSize > 768) {
         ins.setAttribute("data-ad-width", "728");
         ins.setAttribute("data-ad-height", "90");
-        ins.setAttribute("data-ad-unit", "DAN-GiwdXR0gs08Zdbet");
+        ins.setAttribute("data-ad-unit", "DAN-zKlXjXqmvdReRAzZ");
       } else {
         ins.setAttribute("data-ad-width", "250");
         ins.setAttribute("data-ad-height", "250");
-        ins.setAttribute("data-ad-unit", "DAN-hCwEiBAHPVpUbRDT");
+        ins.setAttribute("data-ad-unit", "DAN-sQOoITn34B0waF7N");
       }
 
       script.async = true;
