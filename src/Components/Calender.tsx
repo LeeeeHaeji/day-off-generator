@@ -12,13 +12,35 @@ interface CalenderProps {
 export default function Calender({ currentDate, employees }: CalenderProps) {
   const [year, month] = currentDate.split("-");
 
+  const emptyCells = () => {
+    const cells = [];
+    const result = [];
+    for (let i = 0; i < 7; i++) {
+      cells.push(<span className="col" key={i}></span>);
+    }
+
+    for (let i = 0; i < 5; i++) {
+      result.push(
+        <div className="row" key={i}>
+          {cells}
+        </div>
+      );
+    }
+    return result;
+  };
+
   return (
     <CalenderWrap>
       <p className="year-month">
         {year}년 {month}월
       </p>
       <RenderDays />
-      <RenderCells currentDate={currentDate} employees={employees} />
+
+      {currentDate ? (
+        <RenderCells currentDate={currentDate} employees={employees} />
+      ) : (
+        <div className="emptyCells">{emptyCells()}</div>
+      )}
     </CalenderWrap>
   );
 }
@@ -44,5 +66,26 @@ const CalenderWrap = styled.article`
 
   @media (max-width: 355px) {
     width: 315px;
+  }
+
+  .emptyCells {
+    width: 100%;
+    gap: 10px;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .row {
+    display: flex;
+    height: 100px;
+    gap: 10px;
+  }
+
+  .col {
+    width: 100%;
+    background: ${(props) => props.theme.inputBgColor};
+
+    border-radius: 5px;
+    border: 1px solid ${(props) => props.theme.calenderBorder};
   }
 `;

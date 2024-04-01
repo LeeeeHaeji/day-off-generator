@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import styled from "styled-components";
 import { EmployeeData } from "@/src/type";
@@ -28,6 +28,8 @@ export default function InputData({
   setDayOffMax,
 }: InputDataProps) {
   const [employeeName, setEmployeeName] = useState("");
+  const [dayOffNumErrorMsg, setDayOffNumErrorMsg] = useState("");
+  const [dayOffMaxErrorMsg, setDayOffMaxErrorMsg] = useState("");
 
   const updateEmployeeName = () => {
     const newEmployee: EmployeeData = {
@@ -130,9 +132,26 @@ export default function InputData({
     setDayOffMax(e.target.value);
   };
 
+  useEffect(() => {
+    if (!dayOffNum) {
+      setDayOffNumErrorMsg("필수 입력 값 입니다.");
+    } else {
+      setDayOffNumErrorMsg("");
+    }
+
+    if (!dayOffMax) {
+      setDayOffMaxErrorMsg("필수 입력 값 입니다.");
+    } else {
+      setDayOffMaxErrorMsg("");
+    }
+  }, [dayOffNum, dayOffMax]);
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    fillRandomDayOffs();
+
+    if (!dayOffNumErrorMsg && !dayOffMaxErrorMsg) {
+      fillRandomDayOffs();
+    }
   };
 
   const generateRandomColor = () => {
@@ -164,6 +183,7 @@ export default function InputData({
             value={dayOffNum}
             onChange={handleDayOffNum}
           />
+          {dayOffNumErrorMsg && <p>{dayOffNumErrorMsg}</p>}
         </Data>
 
         <Data>
@@ -176,6 +196,7 @@ export default function InputData({
             value={dayOffMax}
             onChange={handleDayOffMax}
           />
+          {dayOffMaxErrorMsg && <p>{dayOffMaxErrorMsg}</p>}
         </Data>
       </DataWrap>
       <Data>

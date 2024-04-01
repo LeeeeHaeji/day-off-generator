@@ -49,9 +49,10 @@ export default function RenderCells({
         );
       } else {
         days.push(
-          <div className={`col cell disabled`} key={format(day, "yyyy-MM-dd")}>
-            {/* 현재 달과 다른 날짜는 출력하지 않음 */}
-          </div>
+          <div
+            className={`col cell disabled`}
+            key={format(day, "yyyy-MM-dd")}
+          ></div>
         );
       }
 

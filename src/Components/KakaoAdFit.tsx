@@ -27,9 +27,9 @@ export default function KakaoAdFit() {
         ins.setAttribute("data-ad-height", "90");
         ins.setAttribute("data-ad-unit", "DAN-zKlXjXqmvdReRAzZ");
       } else {
-        ins.setAttribute("data-ad-width", "250");
-        ins.setAttribute("data-ad-height", "250");
-        ins.setAttribute("data-ad-unit", "DAN-sQOoITn34B0waF7N");
+        ins.setAttribute("data-ad-width", "320");
+        ins.setAttribute("data-ad-height", "100");
+        ins.setAttribute("data-ad-unit", "DAN-rbJyNmpaejUN6cIx");
       }
 
       script.async = true;
