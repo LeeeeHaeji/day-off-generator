@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { ChromePicker, ColorResult } from "react-color";
 
 import styled from "styled-components";
 import { EmployeeData } from "@/src/type";
@@ -9,8 +10,8 @@ interface AddDayOffProps {
   updateEmployees: (
     updateFunction: (prevEmployees: EmployeeData[]) => EmployeeData[]
   ) => void;
-  dayOffNum: string; // 추가됨
-  dayOffMax: string; // 추가됨
+  dayOffNum: string;
+  dayOffMax: string;
 }
 
 export default function AddDayOff({
@@ -22,6 +23,11 @@ export default function AddDayOff({
   const [selectDayOff, setSelectDayOff] = useState<{ [key: string]: string }>(
     {}
   );
+
+  const [colorPicker, setColorPicker] = useState<{
+    [key: string]: { isOpen: boolean; color: string };
+  }>({});
+
   const canAddDayOff = (dayToAdd: string) => {
     // 모든 직원의 휴무일을 담을 배열 생성
     const allDaysOff = employees.flatMap((employee) => employee.day_off);
@@ -74,6 +80,16 @@ export default function AddDayOff({
     console.log(employees);
   };
 
+  const updateEmployeeColor = (employeeName: string, color: string) => {
+    updateEmployees((prevEmployees) =>
+      prevEmployees.map((employee) =>
+        employee.name === employeeName
+          ? { ...employee, bg_color: color }
+          : employee
+      )
+    );
+  };
+
   const deleteEmployeeDayOff = (
     employeeName: string,
     dayOffToDelete: string
@@ -90,6 +106,12 @@ export default function AddDayOff({
       })
     );
   };
+
+  // const handleChangeComplete = (color: ColorResult) => {
+  //   setColor(color.hex);
+
+  //   document.body.style.backgroundColor = color.hex;
+  // };
 
   return (
     <AddDayOffWrap>
@@ -109,7 +131,59 @@ export default function AddDayOff({
               id="day-off-select"
             >
               <div className="add-day-off">
-                <p>{employee.name}</p>
+                <EmployeeName bg_color={employee.bg_color}>
+                  <button
+                    className="bg-color"
+                    onClick={() => {
+                      const isPickerOpen =
+                        colorPicker[employee.name]?.isOpen || false;
+                      setColorPicker({
+                        ...colorPicker,
+                        [employee.name]: {
+                          isOpen: !isPickerOpen,
+                          color: isPickerOpen
+                            ? colorPicker[employee.name].color
+                            : employee.bg_color,
+                        },
+                      });
+                    }}
+                  ></button>
+                  <p>{employee.name}</p>
+                  {colorPicker[employee.name]?.isOpen && (
+                    <PickerWrap>
+                      <ChromePicker
+                        color={colorPicker[employee.name].color}
+                        onChangeComplete={(colorResult) => {
+                          setColorPicker({
+                            ...colorPicker,
+                            [employee.name]: {
+                              ...colorPicker[employee.name],
+                              color: colorResult.hex,
+                            },
+                          });
+                          updateEmployeeColor(employee.name, colorResult.hex);
+                        }}
+                      />
+                      <button
+                        onClick={() => {
+                          const isPickerOpen =
+                            colorPicker[employee.name]?.isOpen || false;
+                          setColorPicker({
+                            ...colorPicker,
+                            [employee.name]: {
+                              isOpen: !isPickerOpen,
+                              color: isPickerOpen
+                                ? colorPicker[employee.name].color
+                                : employee.bg_color,
+                            },
+                          });
+                        }}
+                      >
+                        닫기
+                      </button>
+                    </PickerWrap>
+                  )}
+                </EmployeeName>
                 <div className="input-day-off">
                   <input
                     type="number"
@@ -239,6 +313,7 @@ const EmployeesData = styled.div`
 `;
 
 const EmployeesDataItem = styled.ul`
+  position: relative;
   * {
     font-size: 1.6rem;
   }
@@ -272,6 +347,45 @@ const EmployeesDataItem = styled.ul`
   .add-button {
     width: 100px;
   }
+`;
+
+const EmployeeName = styled.div<{ bg_color: string }>`
+  display: flex;
+  gap: 5px;
+  align-items: flex-end;
+
+  .bg-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+
+    background: ${(props) => props.bg_color};
+
+    border: 2px dotted white;
+  }
+`;
+
+const PickerWrap = styled.div`
+  padding: 10px;
+  position: absolute;
+  top: 0;
+  left: 25px;
+  background: white;
+
+  display: flex;
+  // flex-direction: column;
+
+  button {
+    // width: 100%;
+    border-radius: 0 2px 2px 0;
+    // background: gray;
+    box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 8px;
+  }
+  border: 2px solid ${(props) => props.theme.accentColor};
+  border-radius: 5px;
+  z-index: 10;
+
+  box-shadow: none;
 `;
 
 const DayOffList = styled.div`

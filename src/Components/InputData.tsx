@@ -32,7 +32,6 @@ export default function InputData({
   const [dateErrorMsg, setDateErrorMsg] = useState("");
   const [dayOffNumErrorMsg, setDayOffNumErrorMsg] = useState("");
   const [dayOffMaxErrorMsg, setDayOffMaxErrorMsg] = useState("");
-  const [employeeErrorMsg, setEmployeeErrorMsg] = useState("");
 
   const updateEmployeeName = () => {
     const newEmployee: EmployeeData = {
@@ -161,13 +160,6 @@ export default function InputData({
       setDayOffMaxErrorMsg("");
     }
 
-    if (!employeeName) {
-      setEmployeeErrorMsg("* 필수 입력 값 입니다.");
-      hasError = true;
-    } else {
-      setEmployeeErrorMsg("");
-    }
-
     if (!hasError) {
       fillRandomDayOffs();
     }
@@ -260,8 +252,6 @@ export default function InputData({
             </ul>
           )}
         </EmployeeList>
-
-        {employeeErrorMsg && <p className="errorMsg">{employeeErrorMsg}</p>}
       </Data>
 
       <button type="submit" className="submit button">

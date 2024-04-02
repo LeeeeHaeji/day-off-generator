@@ -77,7 +77,7 @@ const CalenderWrap = styled.article`
 
   .row {
     display: flex;
-    height: 100px;
+    min-height: 100px;
     gap: 10px;
   }
 
