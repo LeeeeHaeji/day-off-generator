@@ -28,8 +28,11 @@ export default function InputData({
   setDayOffMax,
 }: InputDataProps) {
   const [employeeName, setEmployeeName] = useState("");
+
+  const [dateErrorMsg, setDateErrorMsg] = useState("");
   const [dayOffNumErrorMsg, setDayOffNumErrorMsg] = useState("");
   const [dayOffMaxErrorMsg, setDayOffMaxErrorMsg] = useState("");
+  const [employeeErrorMsg, setEmployeeErrorMsg] = useState("");
 
   const updateEmployeeName = () => {
     const newEmployee: EmployeeData = {
@@ -132,24 +135,40 @@ export default function InputData({
     setDayOffMax(e.target.value);
   };
 
-  useEffect(() => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    let hasError = false;
+
+    if (!currentDate) {
+      setDateErrorMsg("* 필수 선택 값 입니다.");
+      hasError = true;
+    } else {
+      setDateErrorMsg("");
+    }
+
     if (!dayOffNum) {
-      setDayOffNumErrorMsg("필수 입력 값 입니다.");
+      setDayOffNumErrorMsg("* 필수 입력 값 입니다.");
+      hasError = true;
     } else {
       setDayOffNumErrorMsg("");
     }
 
     if (!dayOffMax) {
-      setDayOffMaxErrorMsg("필수 입력 값 입니다.");
+      setDayOffMaxErrorMsg("* 필수 입력 값 입니다.");
+      hasError = true;
     } else {
       setDayOffMaxErrorMsg("");
     }
-  }, [dayOffNum, dayOffMax]);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+    if (!employeeName) {
+      setEmployeeErrorMsg("* 필수 입력 값 입니다.");
+      hasError = true;
+    } else {
+      setEmployeeErrorMsg("");
+    }
 
-    if (!dayOffNumErrorMsg && !dayOffMaxErrorMsg) {
+    if (!hasError) {
       fillRandomDayOffs();
     }
   };
@@ -173,6 +192,7 @@ export default function InputData({
           value={currentDate}
           onChange={handleDate}
         />
+        {dateErrorMsg && <p className="errorMsg">{dateErrorMsg}</p>}
       </Data>
       <DataWrap>
         <Data>
@@ -183,7 +203,7 @@ export default function InputData({
             value={dayOffNum}
             onChange={handleDayOffNum}
           />
-          {dayOffNumErrorMsg && <p>{dayOffNumErrorMsg}</p>}
+          {dayOffNumErrorMsg && <p className="errorMsg">{dayOffNumErrorMsg}</p>}
         </Data>
 
         <Data>
@@ -196,7 +216,7 @@ export default function InputData({
             value={dayOffMax}
             onChange={handleDayOffMax}
           />
-          {dayOffMaxErrorMsg && <p>{dayOffMaxErrorMsg}</p>}
+          {dayOffMaxErrorMsg && <p className="errorMsg">{dayOffMaxErrorMsg}</p>}
         </Data>
       </DataWrap>
       <Data>
@@ -240,6 +260,8 @@ export default function InputData({
             </ul>
           )}
         </EmployeeList>
+
+        {employeeErrorMsg && <p className="errorMsg">{employeeErrorMsg}</p>}
       </Data>
 
       <button type="submit" className="submit button">
@@ -320,6 +342,12 @@ const Data = styled.div`
 
   .button.add {
     width: 100px;
+    font-size: 1.5rem;
+  }
+
+  .errorMsg {
+    color: #e70000;
+    // font-weight: bold;
     font-size: 1.5rem;
   }
 `;
