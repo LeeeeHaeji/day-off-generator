@@ -21,6 +21,6 @@
 
 ## 🎨 Figma [보러가기](https://www.figma.com/file/OdXtAQGlqIuBbzn2FYXfG7/Hello!-Day-Off!?type=design&node-id=73192%3A4193&mode=design&t=vVnHQbOYXvIXosh1-1)
 
-![휴무 스케줄 생성 피그마 미리보기](https://github.com/LeeeeHaeji/day-off-generator/assets/116999139/85c4e8a1-d653-4a7b-a393-1b0da9ec12f5)
+![휴무 스케줄 생성 피그마 미리보기](https://github.com/LeeeeHaeji/hello-day-off/assets/116999139/54c8beec-98da-4251-97da-888d8a63ffa5)
 
 - 피그마를 이용하여 디자인 작업을 진행했습니다.
