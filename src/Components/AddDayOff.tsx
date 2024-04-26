@@ -1,9 +1,12 @@
-import React, { useState } from "react";
-import { ChromePicker, ColorResult } from "react-color";
+import React, { useState, useRef, useEffect } from "react";
+import { ChromePicker } from "react-color";
 
 import styled from "styled-components";
 import { EmployeeData } from "@/src/type";
 import deleteBtn from "../assets/images/delete.png";
+import deleteDarkBtn from "../assets/images/delete-dark.png";
+
+import palette from "../assets/images/palette.png";
 
 interface AddDayOffProps {
   employees: EmployeeData[];
@@ -20,6 +23,11 @@ export default function AddDayOff({
   dayOffNum,
   dayOffMax,
 }: AddDayOffProps) {
+  const nameRefs = useRef<{ [key: string]: HTMLParagraphElement | null }>({});
+  const [colorPickerOffsets, setColorPickerOffsets] = useState<{
+    [key: string]: number;
+  }>({});
+
   const [selectDayOff, setSelectDayOff] = useState<{ [key: string]: string }>(
     {}
   );
@@ -27,6 +35,17 @@ export default function AddDayOff({
   const [colorPicker, setColorPicker] = useState<{
     [key: string]: { isOpen: boolean; color: string };
   }>({});
+
+  useEffect(() => {
+    const offsets: { [key: string]: number } = {};
+    employees.forEach((employee) => {
+      const element = nameRefs.current[employee.name];
+      if (element) {
+        offsets[employee.name] = element.offsetWidth + 35;
+      }
+    });
+    setColorPickerOffsets(offsets);
+  }, [employees]);
 
   const canAddDayOff = (dayToAdd: string) => {
     // 모든 직원의 휴무일을 담을 배열 생성
@@ -107,12 +126,6 @@ export default function AddDayOff({
     );
   };
 
-  // const handleChangeComplete = (color: ColorResult) => {
-  //   setColor(color.hex);
-
-  //   document.body.style.backgroundColor = color.hex;
-  // };
-
   return (
     <AddDayOffWrap>
       <div className="text-wrap">
@@ -132,8 +145,11 @@ export default function AddDayOff({
             >
               <div className="add-day-off">
                 <EmployeeName bg_color={employee.bg_color}>
+                  <p ref={(el) => (nameRefs.current[employee.name] = el)}>
+                    {employee.name}
+                  </p>
                   <button
-                    className="bg-color"
+                    className="bg-change"
                     onClick={() => {
                       const isPickerOpen =
                         colorPicker[employee.name]?.isOpen || false;
@@ -147,10 +163,14 @@ export default function AddDayOff({
                         },
                       });
                     }}
-                  ></button>
-                  <p>{employee.name}</p>
+                  >
+                    <img src={palette} alt="직원 배경색 변경 아이콘" />
+                  </button>
+
                   {colorPicker[employee.name]?.isOpen && (
-                    <PickerWrap>
+                    <PickerWrap
+                      leftOffset={colorPickerOffsets[employee.name] || 0}
+                    >
                       <ChromePicker
                         color={colorPicker[employee.name].color}
                         onChangeComplete={(colorResult) => {
@@ -179,7 +199,7 @@ export default function AddDayOff({
                           });
                         }}
                       >
-                        닫기
+                        <img src={deleteDarkBtn} alt="" />
                       </button>
                     </PickerWrap>
                   )}
@@ -288,12 +308,12 @@ const EmployeesData = styled.div`
   overflow-y: auto;
   max-height: 438px;
 
-  @media (min-width: 628px) {
+  @media (min-width: 910px) {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
   }
 
-  @media (min-width: 1024px) {
+  @media (min-width: 1500px) {
     grid-template-columns: repeat(3, 1fr);
   }
 
@@ -313,7 +333,7 @@ const EmployeesData = styled.div`
 `;
 
 const EmployeesDataItem = styled.ul`
-  position: relative;
+  // position: relative;
   * {
     font-size: 1.6rem;
   }
@@ -350,38 +370,63 @@ const EmployeesDataItem = styled.ul`
 `;
 
 const EmployeeName = styled.div<{ bg_color: string }>`
+  position: relative;
+
   display: flex;
   gap: 5px;
-  align-items: flex-end;
+  align-items: center;
 
+  .bg-change {
+    padding: 0px;
+    background: transparent;
+
+    img {
+      width: 25px;
+      height: 25px;
+    }
+  }
   .bg-color {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
+    background: ${(props) => props.bg_color};
+    border: 2px dotted white;
     border-radius: 50%;
+  }
+
+  p {
+    line-height: 30px;
 
     background: ${(props) => props.bg_color};
-
-    border: 2px dotted white;
+    border: 1px dashed white;
+    padding: 2px 10px 0;
+    border-radius: 50px;
   }
 `;
 
-const PickerWrap = styled.div`
-  padding: 10px;
+const PickerWrap = styled.div<{ leftOffset: number }>`
+  padding: 10px 5px 10px 10px;
   position: absolute;
+
   top: 0;
-  left: 25px;
+  left: ${(props) => props.leftOffset}px;
   background: white;
 
   display: flex;
-  // flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
 
   button {
-    // width: 100%;
-    border-radius: 0 2px 2px 0;
-    // background: gray;
-    box-shadow: rgba(0, 0, 0, 0.3) 0px 4px 8px;
+    img {
+      width: 30px;
+      height: 30px;
+    }
+
+    background: transparent;
+    padding: 0 2px;
   }
+
   border: 2px solid ${(props) => props.theme.accentColor};
+
   border-radius: 5px;
   z-index: 10;
 
@@ -389,7 +434,7 @@ const PickerWrap = styled.div`
 `;
 
 const DayOffList = styled.div`
-  height: 130px;
+  height: 180px;
   background: ${(props) => props.theme.inputBgColor};
 
   padding: 10px;
