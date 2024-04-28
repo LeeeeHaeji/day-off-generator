@@ -1,10 +1,12 @@
 import React, { useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
 
 import { GlobalStyle } from "./Styles/GlobalStyle";
 import { ThemeProvider } from "styled-components";
 import { darkTheme, lightTheme } from "./Styles/theme";
 import { EmployeeData } from "./type";
+import { inputDataAtom } from "./Recoil/inputDataAtom";
 
 import Calender from "./Components/Calender";
 import Header from "./Components/Header";
@@ -14,20 +16,18 @@ import KakaoAdFit from "./Components/KakaoAdFit";
 
 function App() {
   const [isDark, setIsDark] = useState(false);
+  const [inputData, setInputData] = useRecoilState(inputDataAtom);
 
-  const [currentDate, setCurrentDate] = useState("");
-  const [employees, setEmployees] = useState<EmployeeData[]>([]);
-  const [dayOffNum, setDayOffNum] = useState("");
-  const [dayOffMax, setDayOffMax] = useState("");
+  const { employees } = inputData;
+
+  const updateCurrentDate = (newDate: string) => {
+    setInputData({ ...inputData, currentDate: newDate });
+  };
 
   const updateEmployees = (
     updateFunction: (prevEmployees: EmployeeData[]) => EmployeeData[]
   ) => {
-    setEmployees(updateFunction);
-  };
-
-  const updateCurrentDate = (newDate: string) => {
-    setCurrentDate(newDate);
+    setInputData({ ...inputData, employees: updateFunction(employees) });
   };
 
   return (
@@ -39,23 +39,12 @@ function App() {
         <div className="main-item">
           <Wrap>
             <InputData
-              currentDate={currentDate}
               updateCurrentDate={updateCurrentDate}
-              employees={employees}
               updateEmployees={updateEmployees}
-              dayOffNum={dayOffNum}
-              setDayOffNum={setDayOffNum}
-              dayOffMax={dayOffMax}
-              setDayOffMax={setDayOffMax}
             />
-            <Calender currentDate={currentDate} employees={employees} />
+            <Calender />
           </Wrap>
-          <AddDayOff
-            employees={employees}
-            updateEmployees={updateEmployees}
-            dayOffNum={dayOffNum}
-            dayOffMax={dayOffMax}
-          />
+          <AddDayOff updateEmployees={updateEmployees} />
         </div>
         <KakaoAdFit />
       </Main>

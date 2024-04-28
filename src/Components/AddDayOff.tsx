@@ -1,28 +1,25 @@
 import React, { useState, useRef, useEffect } from "react";
+import { useRecoilValue } from "recoil";
 import { ChromePicker } from "react-color";
 
 import styled from "styled-components";
 import { EmployeeData } from "@/src/type";
+import { inputDataAtom } from "../Recoil/inputDataAtom";
+
 import deleteBtn from "../assets/images/delete.png";
 import deleteDarkBtn from "../assets/images/delete-dark.png";
 
 import palette from "../assets/images/palette.png";
 
 interface AddDayOffProps {
-  employees: EmployeeData[];
   updateEmployees: (
     updateFunction: (prevEmployees: EmployeeData[]) => EmployeeData[]
   ) => void;
-  dayOffNum: string;
-  dayOffMax: string;
 }
 
-export default function AddDayOff({
-  employees,
-  updateEmployees,
-  dayOffNum,
-  dayOffMax,
-}: AddDayOffProps) {
+export default function AddDayOff({ updateEmployees }: AddDayOffProps) {
+  const { employees, dayOffNum, dayOffMax } = useRecoilValue(inputDataAtom);
+
   const nameRefs = useRef<{ [key: string]: HTMLParagraphElement | null }>({});
   const [colorPickerOffsets, setColorPickerOffsets] = useState<{
     [key: string]: number;

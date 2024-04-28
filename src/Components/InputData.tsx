@@ -1,37 +1,38 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { useRecoilState } from "recoil";
 
 import styled from "styled-components";
 import { EmployeeData } from "@/src/type";
+import { inputDataAtom } from "../Recoil/inputDataAtom";
 import deleteBtn from "../assets/images/delete.png";
 
 interface InputDataProps {
-  currentDate: string;
   updateCurrentDate: (newDate: string) => void;
-  employees: EmployeeData[];
   updateEmployees: (
     updateFunction: (prevEmployees: EmployeeData[]) => EmployeeData[]
   ) => void;
-  dayOffNum: string;
-  setDayOffNum: (num: string) => void;
-  dayOffMax: string;
-  setDayOffMax: (max: string) => void;
 }
 
 export default function InputData({
-  currentDate,
   updateCurrentDate,
-  employees,
   updateEmployees,
-  dayOffNum,
-  setDayOffNum,
-  dayOffMax,
-  setDayOffMax,
 }: InputDataProps) {
   const [employeeName, setEmployeeName] = useState("");
+
+  const [inputData, setInputData] = useRecoilState(inputDataAtom);
+  const { currentDate, employees, dayOffNum, dayOffMax } = inputData;
 
   const [dateErrorMsg, setDateErrorMsg] = useState("");
   const [dayOffNumErrorMsg, setDayOffNumErrorMsg] = useState("");
   const [dayOffMaxErrorMsg, setDayOffMaxErrorMsg] = useState("");
+
+  const setDayOffNum = (newNum: string) => {
+    setInputData({ ...inputData, dayOffNum: newNum });
+  };
+
+  const setDayOffMax = (newMax: string) => {
+    setInputData({ ...inputData, dayOffMax: newMax });
+  };
 
   const updateEmployeeName = () => {
     const newEmployee: EmployeeData = {

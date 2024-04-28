@@ -1,17 +1,13 @@
 import { endOfMonth, endOfWeek, startOfMonth, startOfWeek } from "date-fns";
 import { isSameMonth, addDays, format } from "date-fns";
 import styled from "styled-components";
-import { EmployeeData } from "../type";
 
-interface RenderDaysProps {
-  currentDate: string;
-  employees: EmployeeData[];
-}
+import { useRecoilValue } from "recoil";
+import { inputDataAtom } from "../Recoil/inputDataAtom";
 
-export default function RenderCells({
-  currentDate,
-  employees,
-}: RenderDaysProps) {
+export default function RenderCells() {
+  const { currentDate, employees } = useRecoilValue(inputDataAtom);
+
   const monthStart = startOfMonth(new Date(currentDate));
   const monthEnd = endOfMonth(monthStart);
   const startDate = startOfWeek(monthStart);

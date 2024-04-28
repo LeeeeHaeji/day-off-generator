@@ -1,15 +1,13 @@
 import styled from "styled-components";
+import { useRecoilValue } from "recoil";
 
 import RenderDays from "./RenderDays";
 import RenderCells from "./RenderCells";
-import { EmployeeData } from "../type";
+import { inputDataAtom } from "../Recoil/inputDataAtom";
 
-interface CalenderProps {
-  currentDate: string;
-  employees: EmployeeData[];
-}
+export default function Calender() {
+  const { currentDate, employees } = useRecoilValue(inputDataAtom);
 
-export default function Calender({ currentDate, employees }: CalenderProps) {
   const [year, month] = currentDate.split("-");
 
   const emptyCells = () => {
@@ -37,7 +35,7 @@ export default function Calender({ currentDate, employees }: CalenderProps) {
       <RenderDays />
 
       {currentDate ? (
-        <RenderCells currentDate={currentDate} employees={employees} />
+        <RenderCells />
       ) : (
         <div className="emptyCells">{emptyCells()}</div>
       )}
