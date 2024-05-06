@@ -1,0 +1,3 @@
+User-agent: *
+
+Sitemap: https://leeeehaeji.github.io/hello-day-off/sitemap.xml
