@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useRecoilValue } from "recoil";
-import { ChromePicker } from "react-color";
+import { ColorResult, ChromePicker } from "react-color";
+import rgbHex from "rgb-hex";
 
 import styled from "styled-components";
 import { EmployeeData } from "@/src/type";
@@ -19,15 +20,16 @@ interface AddDayOffProps {
 
 export default function AddDayOff({ updateEmployees }: AddDayOffProps) {
   const { employees, dayOffNum, dayOffMax } = useRecoilValue(inputDataAtom);
-
-  const nameRefs = useRef<{ [key: string]: HTMLParagraphElement | null }>({});
-  const [colorPickerOffsets, setColorPickerOffsets] = useState<{
-    [key: string]: number;
-  }>({});
-
   const [selectDayOff, setSelectDayOff] = useState<{ [key: string]: string }>(
     {}
   );
+
+  // 직원별 배경색
+  const nameRefs = useRef<{ [key: string]: HTMLParagraphElement | null }>({});
+
+  const [colorPickerOffsets, setColorPickerOffsets] = useState<{
+    [key: string]: number;
+  }>({});
 
   const [colorPicker, setColorPicker] = useState<{
     [key: string]: { isOpen: boolean; color: string };
@@ -44,56 +46,131 @@ export default function AddDayOff({ updateEmployees }: AddDayOffProps) {
     setColorPickerOffsets(offsets);
   }, [employees]);
 
-  const canAddDayOff = (dayToAdd: string) => {
-    // 모든 직원의 휴무일을 담을 배열 생성
-    const allDaysOff = employees.flatMap((employee) => employee.day_off);
+  const toggleColorPicker = (employeeName: string) => {
+    const isPickerOpen = colorPicker[employeeName]?.isOpen || false;
+    const currentColor =
+      colorPicker[employeeName]?.color ||
+      employees.find((emp) => emp.name === employeeName)?.bg_color ||
+      "#FFFFFF";
 
-    // 특정 휴무일의 중복 횟수 계산
-    const dayCount = allDaysOff.reduce(
-      (acc, day) => acc + (day === dayToAdd ? 1 : 0),
-      0
-    );
-
-    // 중복 횟수가 dayOffMax보다 작거나 같으면 추가 가능
-    return dayCount < parseInt(dayOffMax);
+    setColorPicker((prev) => ({
+      ...prev,
+      [employeeName]: {
+        isOpen: !isPickerOpen,
+        color: currentColor,
+      },
+    }));
   };
 
-  const updateEmployeeDayOff = (employeeName: string) => {
-    const dayOffString = String(selectDayOff[employeeName]);
+  const closeColorPicker = (employeeName: string) => {
+    setColorPicker((prev) => ({
+      ...prev,
+      [employeeName]: {
+        ...prev[employeeName],
+        isOpen: false,
+      },
+    }));
+  };
 
-    if (!canAddDayOff(dayOffString)) {
-      alert(`해당 날짜에는 이미 최대 휴무 인원이 배정되었습니다.`);
-      return;
-    }
+  // const canAddDayOff = (dayToAdd: string) => {
+  //   // 모든 직원의 휴무일을 담을 배열 생성
+  //   const allDaysOff = employees.flatMap((employee) => employee.day_off);
 
+  //   // 특정 휴무일의 중복 횟수 계산
+  //   const dayCount = allDaysOff.reduce(
+  //     (acc, day) => acc + (day === dayToAdd ? 1 : 0),
+  //     0
+  //   );
+
+  //   // 중복 횟수가 dayOffMax보다 작거나 같으면 추가 가능
+  //   return dayCount < parseInt(dayOffMax);
+  // };
+
+  const updateFixDayOff = (employeeName: string) => {
+    const fixDayOff = String(selectDayOff[employeeName]);
+    updateDayOff(employeeName, fixDayOff, undefined);
+  };
+
+  const updaterandomDayOff = (employeeName: string) => {
+    const randomDayOff = String(selectDayOff[employeeName]);
+    updateDayOff(employeeName, undefined, randomDayOff);
+  };
+
+  const updateDayOff = (
+    employeeName: string,
+    newFixDayOff?: string,
+    newrandomDayOff?: string
+  ) => {
     updateEmployees((prevEmployees) =>
       prevEmployees.map((employee) => {
         if (employee.name === employeeName) {
-          // 직원의 휴무일 수가 dayOffNum을 초과하는지 검사
-          if (!employee.day_off.includes(dayOffString)) {
-            // 직원의 휴무일 수가 dayOffNum을 초과하는지 검사
-            if (employee.day_off.length < parseInt(dayOffNum)) {
-              return {
-                ...employee,
-                day_off: [...employee.day_off, dayOffString],
-              };
-            } else {
-              alert(
-                `${employeeName}의 휴무일이 이미 최대 개수에 도달했습니다.`
-              );
-            }
-          } else {
-            // 중복된 휴무일인 경우 경고 메시지 표시
+          const updatedFixDayOff = newFixDayOff
+            ? [...employee.fix_day_off, newFixDayOff]
+            : employee.fix_day_off;
+          const updatedrandomDayOff = newrandomDayOff
+            ? [...employee.random_day_off, newrandomDayOff]
+            : employee.random_day_off;
+
+          const allDaysOff = [...updatedFixDayOff, ...updatedrandomDayOff];
+
+          // 이미 등록된 휴무일인지 확인
+          if (newFixDayOff && employee.day_off.includes(newFixDayOff)) {
             alert(
-              `${employeeName}의 휴무일 중에 이미 ${dayOffString}이(가) 있습니다.`
+              `${employeeName}의 휴무일 중에 이미 ${newFixDayOff}가 있습니다.`
             );
+            return employee;
           }
+          if (newrandomDayOff && employee.day_off.includes(newrandomDayOff)) {
+            alert(
+              `${employeeName}의 휴무일 중에 이미 ${newrandomDayOff}가 있습니다.`
+            );
+            return employee;
+          }
+
+          // 최대 휴무 인원을 넘지 않는지 확인
+          const dayCount = allDaysOff.reduce(
+            (acc, day) =>
+              acc + (day === newFixDayOff || day === newrandomDayOff ? 1 : 0),
+            0
+          );
+
+          if (dayCount > parseInt(dayOffMax)) {
+            alert(`해당 날짜에는 이미 최대 휴무 인원이 배정되었습니다.`);
+            return employee;
+          }
+
+          if (allDaysOff.length > parseInt(dayOffNum)) {
+            alert(`${employeeName}의 휴무일이 이미 최대 개수에 도달했습니다.`);
+            return employee;
+          }
+
+          return {
+            ...employee,
+            fix_day_off: updatedFixDayOff,
+            random_day_off: updatedrandomDayOff,
+            day_off: allDaysOff,
+          };
         }
         return employee;
       })
     );
+  };
 
-    console.log(employees);
+  const updateColor = (employeeName: string, colorResult: ColorResult) => {
+    const alpha = colorResult.rgb.a ?? 1; // 0-1을 0-255 범위로 변환
+    const colorHex =
+      "#" +
+      rgbHex(colorResult.rgb.r, colorResult.rgb.g, colorResult.rgb.b, alpha);
+
+    setColorPicker((prevColorPicker) => ({
+      ...prevColorPicker,
+      [employeeName]: {
+        ...prevColorPicker[employeeName],
+        color: colorHex,
+      },
+    }));
+
+    updateEmployeeColor(employeeName, colorHex);
   };
 
   const updateEmployeeColor = (employeeName: string, color: string) => {
@@ -106,17 +183,42 @@ export default function AddDayOff({ updateEmployees }: AddDayOffProps) {
     );
   };
 
-  const deleteEmployeeDayOff = (
-    employeeName: string,
-    dayOffToDelete: string
-  ) => {
+  const deleteFixDayOff = (employeeName: string, dayOffToDelete: string) => {
     updateEmployees((prevEmployees) =>
       prevEmployees.map((employee) => {
         if (employee.name === employeeName) {
-          const newDayOff = employee.day_off.filter(
+          const updatedFixDayOff = employee.fix_day_off.filter(
             (dayOff) => dayOff !== dayOffToDelete
           );
-          return { ...employee, day_off: newDayOff };
+          const updatedDayOff = employee.day_off.filter(
+            (dayOff) => dayOff !== dayOffToDelete
+          );
+          return {
+            ...employee,
+            fix_day_off: updatedFixDayOff,
+            day_off: updatedDayOff,
+          };
+        }
+        return employee;
+      })
+    );
+  };
+
+  const deleterandomDayOff = (employeeName: string, dayOffToDelete: string) => {
+    updateEmployees((prevEmployees) =>
+      prevEmployees.map((employee) => {
+        if (employee.name === employeeName) {
+          const updatedrandomDayOff = employee.random_day_off.filter(
+            (dayOff) => dayOff !== dayOffToDelete
+          );
+          const updatedDayOff = employee.day_off.filter(
+            (dayOff) => dayOff !== dayOffToDelete
+          );
+          return {
+            ...employee,
+            random_day_off: updatedrandomDayOff,
+            day_off: updatedDayOff,
+          };
         }
         return employee;
       })
@@ -147,97 +249,96 @@ export default function AddDayOff({ updateEmployees }: AddDayOffProps) {
                   </p>
                   <button
                     className="bg-change"
-                    onClick={() => {
-                      const isPickerOpen =
-                        colorPicker[employee.name]?.isOpen || false;
-                      setColorPicker({
-                        ...colorPicker,
-                        [employee.name]: {
-                          isOpen: !isPickerOpen,
-                          color: isPickerOpen
-                            ? colorPicker[employee.name].color
-                            : employee.bg_color,
-                        },
-                      });
-                    }}
+                    onClick={() => toggleColorPicker(employee.name)}
                   >
                     <img src={palette} alt="직원 배경색 변경 아이콘" />
                   </button>
 
                   {colorPicker[employee.name]?.isOpen && (
                     <PickerWrap
-                      leftOffset={colorPickerOffsets[employee.name] || 0}
+                      leftoffset={colorPickerOffsets[employee.name] || 0}
                     >
                       <ChromePicker
                         color={colorPicker[employee.name].color}
-                        onChangeComplete={(colorResult) => {
-                          setColorPicker({
-                            ...colorPicker,
-                            [employee.name]: {
-                              ...colorPicker[employee.name],
-                              color: colorResult.hex,
-                            },
-                          });
-                          updateEmployeeColor(employee.name, colorResult.hex);
-                        }}
+                        onChangeComplete={(colorResult) =>
+                          updateColor(employee.name, colorResult)
+                        }
                       />
-                      <button
-                        onClick={() => {
-                          const isPickerOpen =
-                            colorPicker[employee.name]?.isOpen || false;
-                          setColorPicker({
-                            ...colorPicker,
-                            [employee.name]: {
-                              isOpen: !isPickerOpen,
-                              color: isPickerOpen
-                                ? colorPicker[employee.name].color
-                                : employee.bg_color,
-                            },
-                          });
-                        }}
-                      >
+                      <button onClick={() => closeColorPicker(employee.name)}>
                         <img src={deleteDarkBtn} alt="" />
                       </button>
                     </PickerWrap>
                   )}
                 </EmployeeName>
-                <div className="input-day-off">
-                  <input
-                    type="number"
-                    id={employee.name}
-                    value={selectDayOff[employee.name] || ""}
-                    onChange={(e) =>
-                      setSelectDayOff({
-                        ...selectDayOff,
-                        [employee.name]: e.target.value,
-                      })
-                    }
-                  />
-                  <button
+
+                <input
+                  type="number"
+                  placeholder="휴무일을 입력해주세요."
+                  id={employee.name}
+                  value={selectDayOff[employee.name] || ""}
+                  onChange={(e) =>
+                    setSelectDayOff({
+                      ...selectDayOff,
+                      [employee.name]: e.target.value,
+                    })
+                  }
+                />
+                {/* <button
                     className="add-button"
                     type="button"
                     onClick={() => updateEmployeeDayOff(employee.name)}
                   >
                     추가
+                  </button> */}
+                <div className="button-list">
+                  <button
+                    type="button"
+                    onClick={() => updateFixDayOff(employee.name)}
+                  >
+                    지정 휴무일 추가
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => updaterandomDayOff(employee.name)}
+                  >
+                    랜덤 휴무일 추가
                   </button>
                 </div>
               </div>
 
               <DayOffList>
-                <p className="list-name">휴무일: </p>
-                <ul>
-                  {employee.day_off.map((day, index) => (
-                    <DayOffListItem key={index}>
-                      <p>{day}일</p>
-                      <button
-                        type="button"
-                        onClick={() => deleteEmployeeDayOff(employee.name, day)}
-                      >
-                        <img src={deleteBtn} alt="" />
-                      </button>
-                    </DayOffListItem>
-                  ))}
-                </ul>
+                <div className="fix-day-off">
+                  <p className="list-name">지정 휴무일</p>
+                  <ul>
+                    {employee.fix_day_off.map((day, index) => (
+                      <DayOffListItem key={index}>
+                        <p>{day}일</p>
+                        <button
+                          type="button"
+                          onClick={() => deleteFixDayOff(employee.name, day)}
+                        >
+                          <img src={deleteBtn} alt="" />
+                        </button>
+                      </DayOffListItem>
+                    ))}
+                  </ul>
+                </div>
+                <div className="random-day-off">
+                  <p className="list-name">랜덤 휴무일</p>
+                  <ul>
+                    {employee.random_day_off.map((day, index) => (
+                      <DayOffListItem key={index}>
+                        <p>{day}일</p>
+                        <button
+                          type="button"
+                          onClick={() => deleterandomDayOff(employee.name, day)}
+                        >
+                          <img src={deleteBtn} alt="" />
+                        </button>
+                      </DayOffListItem>
+                    ))}
+                  </ul>
+                </div>
               </DayOffList>
             </EmployeesDataItem>
           ))
@@ -342,19 +443,24 @@ const EmployeesDataItem = styled.ul`
   .add-day-off {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
   }
 
-  .input-day-off {
+  .button-list {
     display: flex;
-    gap: 5px;
+    gap: 10px;
+    button {
+      width: 100%;
+      height: 48px;
+      font-weight: 700;
+    }
   }
 
   input {
     width: 100%;
     border: none;
     border-radius: 5px;
-    height: 40px;
+    height: 48px;
 
     font-size: 1.4rem;
     padding: 0 10px;
@@ -400,12 +506,12 @@ const EmployeeName = styled.div<{ bg_color: string }>`
   }
 `;
 
-const PickerWrap = styled.div<{ leftOffset: number }>`
+const PickerWrap = styled.div<{ leftoffset: number }>`
   padding: 10px 5px 10px 10px;
   position: absolute;
 
   top: 0;
-  left: ${(props) => props.leftOffset}px;
+  left: ${(props) => props.leftoffset}px;
   background: white;
 
   display: flex;
@@ -433,14 +539,13 @@ const PickerWrap = styled.div<{ leftOffset: number }>`
 const DayOffList = styled.div`
   height: 180px;
   background: ${(props) => props.theme.inputBgColor};
-
+  overflow-y: scroll;
   padding: 10px;
-
   display: flex;
   flex-direction: column;
 
-  border-radius: 10px;
-  gap: 8px;
+  border-radius: 5px;
+  gap: 15px;
 
   p {
     font-size: 1.6rem;
@@ -450,24 +555,32 @@ const DayOffList = styled.div`
     color: #262624;
   }
 
+  div {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
   ul {
-    overflow-y: scroll;
+    // overflow-y: scroll;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding-right: 10px;
+    // padding-right: 10px;
+    // height: 100%;
   }
 
-  ul::-webkit-scrollbar {
+  &::-webkit-scrollbar {
     width: 12px;
   }
 
-  ul::-webkit-scrollbar-thumb {
+  &::-webkit-scrollbar-thumb {
     background: ${(props) => props.theme.accentColor};
     border-radius: 10px;
   }
 
-  ul::-webkit-scrollbar-track {
+  &::-webkit-scrollbar-track {
     background: ${(props) => props.theme.scrollColor};
     border-radius: 10px;
   }

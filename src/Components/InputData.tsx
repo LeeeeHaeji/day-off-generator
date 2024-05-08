@@ -38,11 +38,12 @@ export default function InputData({
     const newEmployee: EmployeeData = {
       name: employeeName,
       day_off: [],
+      fix_day_off: [],
+      random_day_off: [],
       bg_color: generateRandomColor(),
     };
     updateEmployees((prevEmployees) => [...prevEmployees, newEmployee]);
     setEmployeeName("");
-    console.log(employees);
   };
 
   const deleteEmployeeName = (
@@ -77,9 +78,12 @@ export default function InputData({
 
     updateEmployees((prevEmployees) =>
       prevEmployees.map((employee) => {
-        let currentDayOffs = [...employee.day_off];
+        let currentDayOffs = [...employee.fix_day_off];
         const dayInterval = Math.ceil(totalDays / parseInt(dayOffNum)) - 2;
-        while (currentDayOffs.length < parseInt(dayOffNum)) {
+        let randomDayOffs = [];
+        const maxRandomDays = parseInt(dayOffNum) - employee.fix_day_off.length;
+
+        while (randomDayOffs.length < maxRandomDays) {
           let attempts = 0;
           let added = false;
 
@@ -87,8 +91,10 @@ export default function InputData({
             const randomDay = Math.floor(Math.random() * totalDays) + 1;
             if (
               dayOffAllocation[randomDay - 1] < parseInt(dayOffMax) &&
-              isValidDayOff(randomDay, currentDayOffs, dayInterval)
+              isValidDayOff(randomDay, currentDayOffs, dayInterval) &&
+              !currentDayOffs.includes(randomDay.toString())
             ) {
+              randomDayOffs.push(randomDay.toString());
               currentDayOffs.push(randomDay.toString());
               dayOffAllocation[randomDay - 1]++;
               added = true;
@@ -98,13 +104,19 @@ export default function InputData({
 
           if (!added) {
             // 모든 시도 후에도 새로운 휴무일을 추가할 수 없다면 루프를 종료합니다.
+
             break;
           }
         }
 
         return {
           ...employee,
-          day_off: currentDayOffs.sort((a, b) => parseInt(a) - parseInt(b)),
+          day_off: [...employee.fix_day_off, ...randomDayOffs].sort(
+            (a, b) => parseInt(a) - parseInt(b)
+          ),
+          random_day_off: randomDayOffs.sort(
+            (a, b) => parseInt(a) - parseInt(b)
+          ),
         };
       })
     );
@@ -112,10 +124,10 @@ export default function InputData({
 
   const isValidDayOff = (
     day: number,
-    currentDayOffs: string[],
+    allDayOffs: string[],
     dayInterval: number
   ) => {
-    return currentDayOffs.every(
+    return allDayOffs.every(
       (off) => Math.abs(day - parseInt(off)) >= dayInterval
     );
   };
