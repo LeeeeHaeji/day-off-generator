@@ -65,6 +65,11 @@ button {
   border-radius: 5px;
   color: white;
   cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    box-shadow: inset 4px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  }
 }
 
 menu, ol, ul,li {

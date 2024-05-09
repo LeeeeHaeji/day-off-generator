@@ -283,13 +283,7 @@ export default function AddDayOff({ updateEmployees }: AddDayOffProps) {
                     })
                   }
                 />
-                {/* <button
-                    className="add-button"
-                    type="button"
-                    onClick={() => updateEmployeeDayOff(employee.name)}
-                  >
-                    추가
-                  </button> */}
+
                 <div className="button-list">
                   <button
                     type="button"
@@ -323,6 +317,7 @@ export default function AddDayOff({ updateEmployees }: AddDayOffProps) {
                     ))}
                   </ul>
                 </div>
+                <span></span>
                 <div className="random-day-off">
                   <p className="list-name">랜덤 휴무일</p>
                   <ul>
@@ -431,7 +426,6 @@ const EmployeesData = styled.div`
 `;
 
 const EmployeesDataItem = styled.ul`
-  // position: relative;
   * {
     font-size: 1.6rem;
   }
@@ -460,7 +454,7 @@ const EmployeesDataItem = styled.ul`
     width: 100%;
     border: none;
     border-radius: 5px;
-    height: 48px;
+    height: 40px;
 
     font-size: 1.4rem;
     padding: 0 10px;
@@ -537,15 +531,14 @@ const PickerWrap = styled.div<{ leftoffset: number }>`
 `;
 
 const DayOffList = styled.div`
-  height: 180px;
+  height: 210px;
   background: ${(props) => props.theme.inputBgColor};
-  overflow-y: scroll;
   padding: 10px;
   display: flex;
   flex-direction: column;
 
   border-radius: 5px;
-  gap: 15px;
+  gap: 8px;
 
   p {
     font-size: 1.6rem;
@@ -553,6 +546,16 @@ const DayOffList = styled.div`
 
   .list-name {
     color: #262624;
+  }
+
+  .fix-day-off,
+  .random-day-off {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    overflow: hidden;
+    padding: 5px;
   }
 
   div {
@@ -563,31 +566,39 @@ const DayOffList = styled.div`
   }
 
   ul {
-    // overflow-y: scroll;
+    flex-grow: 1;
+    max-height: 80px;
+    overflow-y: scroll;
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    // padding-right: 10px;
-    // height: 100%;
+
+    &::-webkit-scrollbar {
+      width: 12px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: ${(props) => props.theme.accentColor};
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: ${(props) => props.theme.scrollColor};
+      border-radius: 10px;
+    }
   }
 
-  &::-webkit-scrollbar {
-    width: 12px;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: ${(props) => props.theme.accentColor};
+  span {
+    height: 4px;
+    background: ${(props) => props.theme.accentBgColor};
     border-radius: 10px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: ${(props) => props.theme.scrollColor};
-    border-radius: 10px;
+    flex-shrink: 0;
   }
 `;
 
 const DayOffListItem = styled.li`
   width: fit-content;
+  height: 30px;
   display: flex;
   align-items: center;
   padding: 4px 5px 4px 9px;
