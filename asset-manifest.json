@@ -1,16 +1,16 @@
 {
   "files": {
     "main.css": "/hello-day-off/static/css/main.84335fb9.css",
-    "main.js": "/hello-day-off/static/js/main.b28d6558.js",
+    "main.js": "/hello-day-off/static/js/main.cac2f4a7.js",
     "static/media/palette.png": "/hello-day-off/static/media/palette.b9dffc566426b0812f56.png",
     "static/media/logo.svg": "/hello-day-off/static/media/logo.6d3c0c7fabd269a1da8abf3e9ce5d71b.svg",
     "static/media/logoDarkMode.svg": "/hello-day-off/static/media/logoDarkMode.30c4aa608b693e1bfae5cb88766d45f1.svg",
     "index.html": "/hello-day-off/index.html",
     "main.84335fb9.css.map": "/hello-day-off/static/css/main.84335fb9.css.map",
-    "main.b28d6558.js.map": "/hello-day-off/static/js/main.b28d6558.js.map"
+    "main.cac2f4a7.js.map": "/hello-day-off/static/js/main.cac2f4a7.js.map"
   },
   "entrypoints": [
     "static/css/main.84335fb9.css",
-    "static/js/main.b28d6558.js"
+    "static/js/main.cac2f4a7.js"
   ]
 }
